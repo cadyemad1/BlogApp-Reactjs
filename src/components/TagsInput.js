@@ -23,13 +23,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TagsInput = () => {
+const TagsInput = ({ selectedTags }) => {
   const classes = useStyles();
   const [tags, setTags] = useState([]);
 
   const addTags = e => {
     if (e.key === 'Enter' && e.target.value !== '') {
       setTags([...tags, e.target.value]);
+      selectedTags([...tags, e.target.value]);
       e.target.value = '';
     }
   };
