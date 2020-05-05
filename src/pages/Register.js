@@ -1,6 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { string, object, ref } from 'yup';
+import axios from 'axios';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -47,6 +48,7 @@ const useStyles = makeStyles(theme => ({
     }
   }
 }));
+
 const schema = object().shape({
   username: string().required(),
   email: string()
@@ -60,14 +62,29 @@ const schema = object().shape({
     .oneOf([ref('password')], `Passwords doesn't match`)
 });
 
-const Login = () => {
+const Register = props => {
   const classes = useStyles();
   const { register, handleSubmit, errors, formState } = useForm({
     validationSchema: schema,
     mode: 'onBlur'
   });
 
-  const onSubmit = data => console.log(data);
+  const onSubmit = data => {
+    const { username, email, password } = data;
+    console.log('&&', props.history);
+
+    axios
+      .post('http://localhost:3000/user/register', {
+        username,
+        email,
+        password
+      })
+      .then(res => {
+        console.log(res);
+        props.history.replace('/');
+      })
+      .catch(error => console.log('*', error));
+  };
 
   return (
     <div className={classes.bg}>
@@ -153,4 +170,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
