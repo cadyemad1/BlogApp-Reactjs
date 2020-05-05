@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
+import ExploreIcon from '@material-ui/icons/Explore';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   },
   navbar: {
     backgroundColor: '#021834',
-    borderBottom: '1px solid'
+    borderBottom: '1px solid rgba(255, 255, 255, 0.8)'
   },
   avatar: {
     marginRight: theme.spacing(2),
@@ -27,7 +29,11 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.secondary.light
   },
   sectionDesktop: {
-    display: 'flex'
+    display: 'flex',
+    marginRight: 15
+  },
+  link: {
+    backgroundColor: 'white'
   }
 }));
 
@@ -47,14 +53,23 @@ const Header = () => {
           <div className={classes.grow} />
 
           <div className={classes.sectionDesktop}>
-            <IconButton color='inherit'>
-              <HomeIcon />
-            </IconButton>
-            <IconButton color='inherit'>
-              <PersonIcon />
-            </IconButton>
-            <BlogForm />
+            <Link to='/'>
+              <IconButton color='secondary'>
+                <HomeIcon />
+              </IconButton>
+            </Link>
+            <Link to='/followed'>
+              <IconButton color='secondary'>
+                <ExploreIcon />
+              </IconButton>
+            </Link>
+            <Link to='/'>
+              <IconButton color='secondary'>
+                <PersonIcon />
+              </IconButton>
+            </Link>
           </div>
+          <BlogForm />
         </Toolbar>
       </AppBar>
     </div>

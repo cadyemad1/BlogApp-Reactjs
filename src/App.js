@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import Header from './components/Header';
 import Home from './pages/Home';
 import { makeStyles } from '@material-ui/core/styles';
+import FollowedBlog from './pages/FollowedBlog';
 
 const useStyles = makeStyles(theme => ({
   bg: {
@@ -27,12 +28,11 @@ const App = () => {
   const classes = useStyles();
   return (
     <div className={classes.bg}>
-      <Header />
-
       <Switch>
         <Route path='/' exact component={Home} />
         <Route path='/sign-up' exact component={Register} />
         <Route path='/login' exact component={Login} />
+        <Route path='/followed' exact component={FollowedBlog} />
       </Switch>
     </div>
   );

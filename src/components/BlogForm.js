@@ -21,7 +21,7 @@ const BlogForm = () => {
 
   return (
     <div>
-      <Fab color='secondary' onClick={handleClick} variant='square'>
+      <Fab color='secondary' onClick={handleClick}>
         <CreateIcon />
       </Fab>
 
