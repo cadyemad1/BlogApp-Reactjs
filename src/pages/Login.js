@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { string, object } from 'yup';
+import axios from 'axios';
+import axiosInterceptor from '../components/Interceptor/interceptor';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -57,15 +59,26 @@ const schema = object().shape({
     .required()
 });
 
-const Login = () => {
+const Login = props => {
   const classes = useStyles();
   const { register, handleSubmit, errors, formState } = useForm({
     validationSchema: schema,
     mode: 'onBlur'
   });
 
-  const onSubmit = data => console.log(data);
-
+  const onSubmit = data => {
+    const { email, password } = data;
+    axios
+      .post('http://localhost:3000/user/login', {
+        email,
+        password
+      })
+      .then(res => {
+        localStorage.setItem('token', res.data.token);
+        props.history.replace('/');
+      })
+      .catch(error => console.log('*', error));
+  };
   return (
     <div className={classes.bg}>
       <Container component='main' maxWidth='xs'>

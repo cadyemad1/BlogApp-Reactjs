@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+
 import FileUpload from './FileUpload';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -19,6 +21,15 @@ const BlogForm = () => {
 
   const onSelectTags = tags => console.log(tags);
 
+  const onSubmit = () => {
+    handleClick();
+    axios
+      .get('http://localhost:3000/user/getAll')
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => console.log('BlogForm*', error));
+  };
   return (
     <div>
       <Fab color='secondary' onClick={handleClick}>
@@ -55,7 +66,7 @@ const BlogForm = () => {
           <Button onClick={handleClick} color='primary'>
             Cancel
           </Button>
-          <Button onClick={handleClick} color='primary'>
+          <Button onClick={onSubmit} color='primary'>
             Post
           </Button>
         </DialogActions>

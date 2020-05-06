@@ -27,10 +27,13 @@ const Home = () => {
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
-  useEffect(() => {
-    console.log('useEffect');
-    axios.get('http://localhost:3000/user').then(res => console.log(res));
-  }, []);
+  // useEffect(() => {
+  //   console.log('useEffect');
+  //   axios
+  //     .get('http://localhost:3000/user/home')
+  //     .then(res => console.log(res))
+  //     .catch(err => console.log('FROM HOME', err));
+  // }, []);
 
   return (
     <Fragment>

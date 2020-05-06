@@ -71,8 +71,6 @@ const Register = props => {
 
   const onSubmit = data => {
     const { username, email, password } = data;
-    console.log('&&', props.history);
-
     axios
       .post('http://localhost:3000/user/register', {
         username,
