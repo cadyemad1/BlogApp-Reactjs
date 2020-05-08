@@ -62,7 +62,7 @@ const schema = object().shape({
     .oneOf([ref('password')], `Passwords doesn't match`)
 });
 
-const Register = props => {
+const Register = ({ history }) => {
   const classes = useStyles();
   const { register, handleSubmit, errors, formState } = useForm({
     validationSchema: schema,
@@ -79,7 +79,7 @@ const Register = props => {
       })
       .then(res => {
         console.log(res);
-        props.history.replace('/');
+        history.replace('/');
       })
       .catch(error => console.log('*', error));
   };

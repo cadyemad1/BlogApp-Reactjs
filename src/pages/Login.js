@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useSelector, useDispatch } from 'react-redux';
 import { string, object } from 'yup';
 import axios from 'axios';
 import axiosInterceptor from '../components/Interceptor/interceptor';
+
+import { setAuthUser } from '../actions/authActions';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -66,6 +69,7 @@ const Login = props => {
     mode: 'onBlur'
   });
 
+  const dispatch = useDispatch();
   const onSubmit = data => {
     const { email, password } = data;
     axios
@@ -74,6 +78,10 @@ const Login = props => {
         password
       })
       .then(res => {
+        //dispatch action set state
+
+        dispatch(setAuthUser(res.data.user));
+
         localStorage.setItem('token', res.data.token);
         props.history.replace('/');
       })

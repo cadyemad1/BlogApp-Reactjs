@@ -1,17 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import store from './store/index';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import CssBaseline from '@material-ui/core/CssBaseline';
 // import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <BrowserRouter>
       <CssBaseline />
       <App />
     </BrowserRouter>
-  </React.StrictMode>,
+  </Provider>,
+
   document.getElementById('root')
 );
 

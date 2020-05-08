@@ -28,7 +28,7 @@ const TagsInput = ({ selectedTags }) => {
   const [tags, setTags] = useState([]);
 
   const addTags = e => {
-    if (e.key === 'Enter' && e.target.value !== '') {
+    if ((e.key === 'Enter' || e.keyCode === 32) && e.target.value !== '') {
       setTags([...tags, e.target.value]);
       selectedTags([...tags, e.target.value]);
       e.target.value = '';

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import moment from 'moment';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -50,30 +51,37 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const BlogCard = ({ handleClick }) => {
+const BlogCard = ({
+  handleClick,
+  blog: {
+    title,
+    body,
+    author: { username },
+    createdAt
+  }
+}) => {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const openProfile = () => {
-    console.log('clicked blogCard');
-
     handleClick();
   };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
   return (
     <Card className={classes.root}>
       <Grid container>
         <CardHeader
           avatar={
             <Avatar aria-label='blog author' className={classes.avatar}>
-              B
+              {username.charAt(0)}
             </Avatar>
           }
-          title='Cady Emad'
-          subheader='September 14, 2016'
+          title={username}
+          subheader={moment(createdAt).format('MMMM D, YYYY')}
           onClick={openProfile}
         />
         {/* <Button variant='contained' size='small' className={classes.btn}>
@@ -87,7 +95,7 @@ const BlogCard = ({ handleClick }) => {
       />
       <CardContent>
         <Typography variant='h5' component='h2'>
-          Blog title
+          {title}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -113,16 +121,7 @@ const BlogCard = ({ handleClick }) => {
       </CardActions>
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
-          <Typography paragraph>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with
-          </Typography>
+          <Typography paragraph>{body}</Typography>
         </CardContent>
       </Collapse>
     </Card>

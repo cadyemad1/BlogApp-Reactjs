@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 import FileUpload from './FileUpload';
@@ -12,30 +13,46 @@ import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Create';
 import TagsInput from './TagsInput';
 
+// const schema = object().shape({
+//   blogTitle: string().required(),
+//   blogBody: string().required()
+// });
+
 const BlogForm = () => {
-  const [open, setOpen] = React.useState(false);
+  const [blogTitle, setBlogTitle] = useState('Insert Your Blog Title');
+  const [blogBody, setBlogBody] = useState('Insert Your Blog Body');
+  const [blogTags, setBlogTags] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  const user = useSelector(state => state.authUser.user);
+  const { _id } = user;
 
   const handleClick = () => {
     setOpen(!open);
   };
 
-  const onSelectTags = tags => console.log(tags);
+  const onSelectTags = tags => setBlogTags(tags);
 
   const onSubmit = () => {
     handleClick();
     axios
-      .get('http://localhost:3000/user/getAll')
+      .post('http://localhost:3000/blog/addBlog', {
+        title: blogTitle,
+        body: blogBody,
+        tags: blogTags,
+        author: _id
+      })
       .then(res => {
         console.log(res);
       })
       .catch(error => console.log('BlogForm*', error));
   };
+
   return (
     <div>
       <Fab color='secondary' onClick={handleClick}>
         <CreateIcon />
       </Fab>
-
       <Dialog
         open={open}
         onClose={handleClick}
@@ -50,14 +67,27 @@ const BlogForm = () => {
             id='title'
             label='Blog Title'
             type='text'
+            value={blogTitle}
+            onChange={e => setBlogTitle(e.target.value)}
+            error={blogTitle === ''}
+            helperText={
+              blogTitle === '' ? 'You must provide a title for field' : ' '
+            }
             fullWidth
           />
+
           <TextField
             autoFocus
             margin='dense'
             id='body'
             label='Blog Body'
             type='text'
+            value={blogBody}
+            onChange={e => setBlogBody(e.target.value)}
+            error={blogBody === ''}
+            helperText={
+              blogBody === '' ? 'You must provide a body for field' : ' '
+            }
             fullWidth
           />
           <TagsInput selectedTags={onSelectTags} />

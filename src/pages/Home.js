@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchBlogs } from '../actions/blogActions';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -23,28 +24,30 @@ const useStyles = makeStyles(theme => ({
 const Home = () => {
   const classes = useStyles();
   const [isOpen, setIsOpen] = useState(false);
+  const blogs = useSelector(state => state.blogs);
+  const dispatch = useDispatch();
 
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
-  // useEffect(() => {
-  //   console.log('useEffect');
-  //   axios
-  //     .get('http://localhost:3000/user/home')
-  //     .then(res => console.log(res))
-  //     .catch(err => console.log('FROM HOME', err));
-  // }, []);
+
+  useEffect(() => {
+    dispatch(fetchBlogs());
+  }, []);
 
   return (
     <Fragment>
+      {console.log('BLOGZ->', blogs)}
+
       <Profile isOpen={isOpen} onToggle={handleClick} />
       <Header />
 
       <Container fixed className={classes.root}>
         <Grid container justify='center'>
           <Grid item xs={7}>
-            <BlogCard handleClick={handleClick} />
-            <BlogCard />
+            {blogs.map(blog => (
+              <BlogCard handleClick={handleClick} blog={blog} key={blog._id} />
+            ))}
           </Grid>
           <Grid item xs={4}>
             <Paper style={{ padding: 20 }}>
