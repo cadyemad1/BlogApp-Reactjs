@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+
 import moment from 'moment';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,9 +17,10 @@ import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Link from '@material-ui/core/Link';
 import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+
+import BlogForm from '../components/BlogForm';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,24 +55,29 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const BlogCard = ({
-  handleClick,
-  blog: {
-    title,
-    body,
-    author: { username },
-    createdAt
-  }
-}) => {
+const BlogCard = ({ handleClick, getUserId, blog }) => {
   const classes = useStyles();
+  const user = useSelector(state => state.authUser.user);
   const [expanded, setExpanded] = useState(false);
+
+  const { _id, title, body, author, createdAt } = blog;
 
   const openProfile = () => {
     handleClick();
+    getUserId(author._id);
   };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  const checkUser = () => {
+    if (author._id === user._id) return true;
+    return false;
+  };
+
+  const onDeleteBlog = () => {
+    axios.delete(`http://localhost:3000/blog/${_id}`);
   };
 
   return (
@@ -77,10 +86,10 @@ const BlogCard = ({
         <CardHeader
           avatar={
             <Avatar aria-label='blog author' className={classes.avatar}>
-              {username.charAt(0)}
+              {author.username?.charAt(0)}
             </Avatar>
           }
-          title={username}
+          title={author.username}
           subheader={moment(createdAt).format('MMMM D, YYYY')}
           onClick={openProfile}
         />
@@ -102,12 +111,22 @@ const BlogCard = ({
         <IconButton title='add to favorites'>
           <FavoriteIcon />
         </IconButton>
-        <IconButton title='delete post'>
-          <DeleteIcon />
-        </IconButton>
-        <IconButton title='edit post'>
-          <EditIcon />
-        </IconButton>
+        {checkUser() ? (
+          <Fragment>
+            <ConfirmDialog
+              title='Delete Blog'
+              content='Are you sure you want to delete this blog?'
+              onConfirm={onDeleteBlog}
+              btnStyle={classes.edtBtn}
+            >
+              <DeleteIcon />
+            </ConfirmDialog>
+
+            <BlogForm editMode={true} blog={blog} />
+          </Fragment>
+        ) : (
+          ''
+        )}
 
         <Link
           component='button'

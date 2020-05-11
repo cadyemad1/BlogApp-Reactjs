@@ -11,16 +11,17 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Create';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 import TagsInput from './TagsInput';
 
-// const schema = object().shape({
-//   blogTitle: string().required(),
-//   blogBody: string().required()
-// });
-
-const BlogForm = () => {
-  const [blogTitle, setBlogTitle] = useState('Insert Your Blog Title');
-  const [blogBody, setBlogBody] = useState('Insert Your Blog Body');
+const BlogForm = ({ editMode, blog = {} }) => {
+  const [blogTitle, setBlogTitle] = useState(
+    blog.title || 'Insert Your Blog Title'
+  );
+  const [blogBody, setBlogBody] = useState(
+    blog.body || 'Insert Your Blog Body'
+  );
   const [blogTags, setBlogTags] = useState([]);
   const [open, setOpen] = useState(false);
 
@@ -35,30 +36,49 @@ const BlogForm = () => {
 
   const onSubmit = () => {
     handleClick();
-    axios
-      .post('http://localhost:3000/blog/addBlog', {
-        title: blogTitle,
-        body: blogBody,
-        tags: blogTags,
-        author: _id
-      })
-      .then(res => {
-        console.log(res);
-      })
-      .catch(error => console.log('BlogForm*', error));
+    if (!editMode) {
+      axios
+        .post('http://localhost:3000/blog/addBlog', {
+          title: blogTitle,
+          body: blogBody,
+          tags: blogTags,
+          author: _id
+        })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(error => console.log('BlogForm*', error));
+    } else {
+      axios
+        .patch(`http://localhost:3000/blog/${blog._id}`, {
+          title: blogTitle,
+          body: blogBody,
+          tags: blogTags,
+          author: _id
+        })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(error => console.log('BlogForm*', error));
+    }
   };
 
   return (
     <div>
-      <Fab color='secondary' onClick={handleClick}>
-        <CreateIcon />
-      </Fab>
-      <Dialog
-        open={open}
-        onClose={handleClick}
-        aria-labelledby='form-dialog-title'
-      >
-        <DialogTitle id='form-dialog-title'>Post Blog</DialogTitle>
+      {editMode ? (
+        <IconButton title='edit post' onClick={handleClick}>
+          <EditIcon />
+        </IconButton>
+      ) : (
+        <Fab color={editMode ? '' : 'secondary'} onClick={handleClick}>
+          <CreateIcon />
+        </Fab>
+      )}
+
+      <Dialog open={open} onClose={handleClick}>
+        <DialogTitle id='form-dialog-title'>
+          {editMode ? 'Edit Blog' : 'Post Blog'}
+        </DialogTitle>
         <DialogContent>
           <FileUpload></FileUpload>
           <TextField
@@ -90,14 +110,14 @@ const BlogForm = () => {
             }
             fullWidth
           />
-          <TagsInput selectedTags={onSelectTags} />
+          <TagsInput selectedTags={onSelectTags} tagsArr={blog.tags} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClick} color='primary'>
             Cancel
           </Button>
           <Button onClick={onSubmit} color='primary'>
-            Post
+            {editMode ? 'Save' : 'Post'}
           </Button>
         </DialogActions>
       </Dialog>

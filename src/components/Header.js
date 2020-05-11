@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { searchBlogs } from '../actions/blogActions';
 
 import { makeStyles } from '@material-ui/core/styles';
 import HomeIcon from '@material-ui/icons/Home';
@@ -39,8 +42,13 @@ const useStyles = makeStyles(theme => ({
 
 const Header = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-  const search = value => console.log(value);
+  const search = value => {
+    dispatch(searchBlogs(value));
+    history.push('/search');
+  };
 
   return (
     <div className={classes.grow}>
