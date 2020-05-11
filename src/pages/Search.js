@@ -2,16 +2,12 @@ import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Container } from '@material-ui/core';
-import LinearProgress from '@material-ui/core/LinearProgress';
 
 import Header from '../components/Header';
 import BlogCard from '../components/BlogCard';
 
 const Search = () => {
   const blogs = useSelector(state => state.blogs.filteredBlogs);
-
-  console.log('hello from search');
-  console.log(blogs);
 
   return (
     <Fragment>

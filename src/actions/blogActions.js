@@ -43,12 +43,26 @@ export const searchBlogs = value => {
       const { data } = await axios.get(
         `http://localhost:3000/blog/search?searchquery=${value}`
       );
-      console.log('data->', data);
 
+      //edit data
+      if (data.length && data[0].username) {
+        const newData = data.map(el => {
+          return el.blogs?.map(blog => ({
+            ...blog,
+            author: { _id: el.id, username: el.username }
+          }));
+        });
+        const blogs = newData.flat();
+        dispatch(setFilteredBlogs(blogs));
+        dispatch(setLoading(false));
+        return;
+      }
+
+      // console.log('Action data->', blogs);
       dispatch(setFilteredBlogs(data));
       dispatch(setLoading(false));
     } catch (err) {
-      console.log('in catch');
+      console.log('in catch', err);
 
       // dispatch(hasMoreBlogs(false));
       // dispatch(setLoading(false));
