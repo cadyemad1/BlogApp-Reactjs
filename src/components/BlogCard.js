@@ -21,6 +21,7 @@ import Grid from '@material-ui/core/Grid';
 
 import BlogForm from '../components/BlogForm';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { deleteBlog } from '../actions/blogActions';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -60,6 +61,8 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
   const user = useSelector(state => state.authUser.user);
   const [expanded, setExpanded] = useState(false);
 
+  const dispatch = useDispatch();
+
   const { _id, title, body, author, createdAt } = blog;
 
   const openProfile = () => {
@@ -77,6 +80,7 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
   };
 
   const onDeleteBlog = () => {
+    dispatch(deleteBlog(_id));
     axios.delete(`http://localhost:3000/blog/${_id}`);
   };
 
@@ -86,7 +90,7 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
         <CardHeader
           avatar={
             <Avatar aria-label='blog author' className={classes.avatar}>
-              {author.username?.charAt(0)}
+              {author.username.charAt(0)}
             </Avatar>
           }
           title={author.username}
@@ -99,7 +103,7 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
       </Grid>
       <CardMedia
         className={classes.media}
-        image='/img.png'
+        image='/logo512.png'
         title='Blog image'
       />
       <CardContent>

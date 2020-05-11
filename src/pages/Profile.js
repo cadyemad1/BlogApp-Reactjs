@@ -1,6 +1,7 @@
-import React, { Fragment, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { Fragment, useEffect, useState } from 'react';
+import axios from 'axios';
 
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
   Link,
@@ -43,28 +44,39 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Profile = ({ isOpen, onToggle }) => {
+const Profile = ({ isOpen, onToggle, userId }) => {
   const classes = useStyles();
+  const [userBlogs, setUserBlogs] = useState([]);
 
-  const toggleDrawer = () => {
+  const toggleProfile = () => {
     onToggle();
   };
 
-  // useEffect(() => {
-  //   console.log('mountedd');
-  //   return () => {
-  //     console.log('unmount');
-  //   };
-  // }, []);
+  const getProfile = async () => {
+    const { data } = await axios.get(`http://localhost:3000/user?id=${userId}`);
+    const { blogs, username, id } = data;
+    const blogsByUser = blogs.map(blog => ({
+      ...blog,
+      author: { _id: id, username: username }
+    }));
+    console.log('from profile', blogsByUser);
+    setUserBlogs(blogsByUser);
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, [userId]);
 
   return (
     <Fragment>
-      <Drawer anchor='right' open={isOpen} onClose={toggleDrawer}>
+      <Drawer anchor='right' open={isOpen} onClose={toggleProfile}>
         <Paper className={classes.paper}>
           <div className={classes.flex}>
             <div className={classes.flex}>
               <ArrowBackIosIcon fontSize='small' color='secondary' />
-              <Link color='secondary'>Back</Link>
+              <Link color='secondary' onClick={toggleProfile}>
+                Back
+              </Link>
             </div>
             <Button variant='contained' color='primary' size='small'>
               Follow
@@ -73,13 +85,15 @@ const Profile = ({ isOpen, onToggle }) => {
 
           <div className={classes.colFlex}>
             <Avatar variant='rounded' className={cx(classes.avatar, classes.m)}>
-              C
+              {userBlogs.length ? userBlogs[0].author.username.charAt(0) : ''}
             </Avatar>
             <Typography variant='h4' className={classes.mb}>
-              Cady Emad
+              {userBlogs.length ? userBlogs[0].author.username : ''}
             </Typography>
           </div>
-          <BlogCard />
+          {userBlogs?.map(blog => (
+            <BlogCard key={blog._id} blog={blog} />
+          ))}
         </Paper>
       </Drawer>
     </Fragment>

@@ -11,6 +11,7 @@ import Header from './components/Header';
 import Home from './pages/Home';
 import { makeStyles } from '@material-ui/core/styles';
 import FollowedBlog from './pages/FollowedBlog';
+import Search from './pages/Search';
 
 const useStyles = makeStyles(theme => ({
   bg: {
@@ -33,6 +34,7 @@ const App = () => {
         <Route path='/sign-up' exact component={Register} />
         <Route path='/login' exact component={Login} />
         <Route path='/followed' exact component={FollowedBlog} />
+        <Route path='/search' exact component={Search} />
       </Switch>
     </div>
   );

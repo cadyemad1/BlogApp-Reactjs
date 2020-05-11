@@ -39,6 +39,7 @@ const Home = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [userId, setUserId] = useState();
 
   const blogs = useSelector(state => state.blogs.blogs);
   const loading = useSelector(state => state.blogs.loading);
@@ -65,15 +66,18 @@ const Home = () => {
     setIsOpen(!isOpen);
   };
 
+  const getUserId = userId => {
+    setUserId(userId);
+  };
+
   useEffect(() => {
     dispatch(fetchBlogs(page, limit));
   }, [page]);
 
   return (
     <Fragment>
-      <Profile isOpen={isOpen} onToggle={handleClick} />
+      <Profile isOpen={isOpen} userId={userId} onToggle={handleClick} />
       <Header />
-
       <Container fixed className={classes.root}>
         <Grid container justify='center'>
           <Grid item xs={7}>
@@ -81,12 +85,20 @@ const Home = () => {
               if (blogs.length === index + 1)
                 return (
                   <div ref={lastBlogRef} key={blog._id}>
-                    <BlogCard handleClick={handleClick} blog={blog} />
+                    <BlogCard
+                      handleClick={handleClick}
+                      getUserId={getUserId}
+                      blog={blog}
+                    />
                   </div>
                 );
               return (
                 <div key={blog._id}>
-                  <BlogCard handleClick={handleClick} blog={blog} />
+                  <BlogCard
+                    handleClick={handleClick}
+                    getUserId={getUserId}
+                    blog={blog}
+                  />
                 </div>
               );
             })}
