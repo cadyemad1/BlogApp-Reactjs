@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
@@ -30,7 +30,6 @@ const useStyles = makeStyles(theme => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
     width: '100%'
@@ -39,6 +38,15 @@ const useStyles = makeStyles(theme => ({
 
 const Search = ({ search }) => {
   const classes = useStyles();
+  const [searchValue, setSearchValue] = useState('');
+
+  const submitResult = e => {
+    setSearchValue(e.target.value);
+    if (e.key === 'Enter') {
+      search(searchValue);
+    }
+  };
+
   return (
     <div className={classes.search}>
       <div className={classes.searchIcon}>
@@ -46,7 +54,7 @@ const Search = ({ search }) => {
       </div>
       <InputBase
         placeholder='Search…'
-        onChange={e => search(e.target.value)}
+        onKeyUp={e => submitResult(e)}
         classes={{
           root: classes.inputRoot,
           input: classes.inputInput
@@ -55,5 +63,4 @@ const Search = ({ search }) => {
     </div>
   );
 };
-// inputProps={{ 'aria-label': 'search' }}
 export default Search;

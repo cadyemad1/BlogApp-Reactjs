@@ -1,7 +1,8 @@
 const initialState = {
   loading: true,
   hasMoreBlogs: true,
-  blogs: []
+  blogs: [],
+  filteredBlogs: []
 };
 
 const blogReducer = (state = initialState, action) => {
@@ -12,8 +13,16 @@ const blogReducer = (state = initialState, action) => {
     case 'SET_BLOGS':
       return { ...state, blogs: [...state.blogs, ...action.payload] };
 
+    case 'SET_FILTERED_BLOGS':
+      return {
+        ...state,
+        filteredBlogs: [...action.payload]
+      };
     case 'HAS_MORE_BLOGS':
       return { ...state, hasMoreBlogs: action.payload };
+
+    case 'DELETE_BLOG':
+      return state.blogs.filter(blog => blog.id !== action.payload);
 
     default:
       return state;
