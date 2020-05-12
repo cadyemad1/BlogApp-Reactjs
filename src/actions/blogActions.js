@@ -35,8 +35,6 @@ export const fetchBlogs = (page, limit) => {
 };
 
 export const searchBlogs = value => {
-  console.log('from action ->', value);
-
   return async dispatch => {
     dispatch(setLoading(true));
     try {

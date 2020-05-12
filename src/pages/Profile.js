@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,6 +15,7 @@ import cx from 'clsx';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 import BlogCard from '../components/BlogCard';
+import { setFollowers } from '../actions/authActions';
 
 const useStyles = makeStyles(theme => ({
   flex: {
@@ -47,6 +49,9 @@ const useStyles = makeStyles(theme => ({
 const Profile = ({ isOpen, onToggle, userId }) => {
   const classes = useStyles();
   const [userBlogs, setUserBlogs] = useState([]);
+  const [isFollowed, setIsFollowed] = useState(false);
+  const user = useSelector(state => state.authUser.user);
+  const dispatch = useDispatch();
 
   const toggleProfile = () => {
     onToggle();
@@ -55,15 +60,40 @@ const Profile = ({ isOpen, onToggle, userId }) => {
   const getProfile = async () => {
     const { data } = await axios.get(`http://localhost:3000/user?id=${userId}`);
     const { blogs, username, id } = data;
+
     const blogsByUser = blogs.map(blog => ({
       ...blog,
       author: { _id: id, username: username }
     }));
-    console.log('from profile', blogsByUser);
+
     setUserBlogs(blogsByUser);
   };
 
+  const manageFollow = () => {
+    setIsFollowed(!isFollowed);
+
+    const userId = userBlogs.length ? userBlogs[0].author._id : -1;
+    if (userId !== -1) {
+      dispatch(setFollowers(userId));
+      axios.patch(`http://localhost:3000/user/${userId}`);
+    }
+  };
+  const checkProfileOwner = () => {
+    console.log('-->', user.id);
+
+    if (user.id && userBlogs?.length) {
+      console.log('hi');
+
+      return user.id !== userBlogs[0].author._id;
+    }
+    return false;
+  };
   useEffect(() => {
+    if (user.followList?.includes(userBlogs?.author._id)) {
+      setIsFollowed(false);
+    } else {
+      setIsFollowed(true);
+    }
     getProfile();
   }, [userId]);
 
@@ -78,9 +108,16 @@ const Profile = ({ isOpen, onToggle, userId }) => {
                 Back
               </Link>
             </div>
-            <Button variant='contained' color='primary' size='small'>
-              Follow
-            </Button>
+            {checkProfileOwner() && (
+              <Button
+                variant='contained'
+                color='primary'
+                size='small'
+                onClick={manageFollow}
+              >
+                {isFollowed ? 'Unfollow' : 'Follow'}
+              </Button>
+            )}
           </div>
 
           <div className={classes.colFlex}>
