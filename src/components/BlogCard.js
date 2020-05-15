@@ -63,7 +63,7 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
 
   const dispatch = useDispatch();
 
-  const { _id, title, body, author, createdAt } = blog;
+  const { _id, title, body, author, createdAt, img } = blog;
 
   const openProfile = () => {
     handleClick();
@@ -101,11 +101,7 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
           Unfollow
         </Button> */}
       </Grid>
-      <CardMedia
-        className={classes.media}
-        image='/logo512.png'
-        title='Blog image'
-      />
+      <CardMedia className={classes.media} image={img} title='Blog image' />
       <CardContent>
         <Typography variant='h5' component='h2'>
           {title}

@@ -28,6 +28,8 @@ export const fetchBlogs = (page, limit) => {
       dispatch(setBlogs(data));
       dispatch(setLoading(false));
     } catch (err) {
+      console.log('err->', err);
+
       dispatch(hasMoreBlogs(false));
       dispatch(setLoading(false));
     }

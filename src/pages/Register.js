@@ -69,19 +69,20 @@ const Register = ({ history }) => {
     mode: 'onBlur'
   });
 
-  const onSubmit = data => {
+  const onSubmit = async data => {
     const { username, email, password } = data;
-    axios
-      .post('http://localhost:3000/user/register', {
-        username,
-        email,
-        password
-      })
-      .then(res => {
-        console.log(res);
-        history.replace('/');
-      })
-      .catch(error => console.log('*', error));
+    const res = await axios.post('http://localhost:3000/user/register', {
+      username,
+      email,
+      password
+    });
+    if (res.status === 200) history.replace('/');
+
+    // .then(res => {
+    //   console.log(res);
+    //   history.replace('/');
+    // })
+    // .catch(error => console.log('*', error));
   };
 
   return (

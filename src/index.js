@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import store from './store/index';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import '../node_modules/react-toastify/dist/ReactToastify.min.css';
 import CssBaseline from '@material-ui/core/CssBaseline';
 // import * as serviceWorker from './serviceWorker';
 

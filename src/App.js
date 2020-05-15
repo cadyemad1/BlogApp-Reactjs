@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import {
   BrowserRouter as Router,
   Switch,
@@ -29,6 +30,7 @@ const App = () => {
   const classes = useStyles();
   return (
     <div className={classes.bg}>
+      <ToastContainer />
       <Switch>
         <Route path='/' exact component={Home} />
         <Route path='/sign-up' exact component={Register} />

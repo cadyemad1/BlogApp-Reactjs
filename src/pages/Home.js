@@ -76,7 +76,7 @@ const Home = () => {
 
   return (
     <Fragment>
-      <Profile isOpen={isOpen} userId={userId} onToggle={handleClick} />
+      {/* <Profile isOpen={isOpen} userId={userId} onToggle={handleClick} /> */}
       <Header />
       <Container fixed className={classes.root}>
         <Grid container justify='center'>

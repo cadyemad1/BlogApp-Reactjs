@@ -70,22 +70,18 @@ const Login = props => {
   });
 
   const dispatch = useDispatch();
-  const onSubmit = data => {
+  const onSubmit = async data => {
     const { email, password } = data;
-    axios
-      .post('http://localhost:3000/user/login', {
-        email,
-        password
-      })
-      .then(res => {
-        //dispatch action set state
+    const res = await axios.post('http://localhost:3000/user/login', {
+      email,
+      password
+    });
+    if (res.status === 200) {
+      dispatch(setAuthUser(res.data.user));
 
-        dispatch(setAuthUser(res.data.user));
-
-        localStorage.setItem('token', res.data.token);
-        props.history.replace('/');
-      })
-      .catch(error => console.log('*', error));
+      localStorage.setItem('token', res.data.token);
+      props.history.replace('/');
+    }
   };
   return (
     <div className={classes.bg}>

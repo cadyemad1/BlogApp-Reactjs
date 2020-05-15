@@ -79,8 +79,6 @@ const Profile = ({ isOpen, onToggle, userId }) => {
     }
   };
   const checkProfileOwner = () => {
-    console.log('-->', user.id);
-
     if (user.id && userBlogs?.length) {
       console.log('hi');
 

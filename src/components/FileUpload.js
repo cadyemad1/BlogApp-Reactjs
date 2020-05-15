@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 
-const FileUpload = () => {
+const FileUpload = ({ onChooseImage }) => {
   const [file, setFile] = useState('');
   const [filename, setFilename] = useState('Choose File');
-  const [uploadedFile, setUploadedFile] = useState({});
+  // const [uploadedFile, setUploadedFile] = useState({});
 
   const onChange = e => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
   };
 
-  const onSubmit = async e => {
+  const onSubmit = e => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('file', file);
-    console.log('UPLOADEDD');
+    onChooseImage(file);
+    // const formData = new FormData();
+    // formData.append('file', file);
+    // console.log('UPLOADEDD');
 
     // try {
     //   const res = await axios.post('/upload', formData, {
@@ -43,13 +44,14 @@ const FileUpload = () => {
       <input
         accept='image/*'
         style={{ display: 'none' }}
-        id='raised-button-file'
+        id='image'
         multiple
         type='file'
+        name='image'
       />
-      <label htmlFor='raised-button-file'>
+      <label htmlFor='image'>
         <Button variant='contained' color='primary' component='span'>
-          Upload
+          Choose An Image
         </Button>
       </label>
     </form>

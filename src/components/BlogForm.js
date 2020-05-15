@@ -24,6 +24,7 @@ const BlogForm = ({ editMode, blog = {} }) => {
   );
   const [blogTags, setBlogTags] = useState([]);
   const [open, setOpen] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState({});
 
   const user = useSelector(state => state.authUser.user);
   const { _id } = user;
@@ -33,16 +34,25 @@ const BlogForm = ({ editMode, blog = {} }) => {
   };
 
   const onSelectTags = tags => setBlogTags(tags);
+  // const onChooseImage = file => {
+  //   setUploadedFile(file);
+  // };
 
   const onSubmit = () => {
     handleClick();
     if (!editMode) {
+      const data = new FormData();
+      data.append('title', blogTitle);
+      data.append('body', blogBody);
+      data.append('tags', blogTags);
+      data.append('author', _id);
+      data.append('img', uploadedFile);
+      console.log('UPLOADEDD->', data);
+      // console.log('data->', blogTitle, blogBody, blogTags, _id, uploadedFile);
+
       axios
-        .post('http://localhost:3000/blog/addBlog', {
-          title: blogTitle,
-          body: blogBody,
-          tags: blogTags,
-          author: _id
+        .post('http://localhost:3000/blog/addBlog', data, {
+          headers: { 'Content-Type': 'multipart/form-data' }
         })
         .then(res => {
           console.log(res);
@@ -79,8 +89,25 @@ const BlogForm = ({ editMode, blog = {} }) => {
         <DialogTitle id='form-dialog-title'>
           {editMode ? 'Edit Blog' : 'Post Blog'}
         </DialogTitle>
+        {/* <form> */}
         <DialogContent>
-          <FileUpload></FileUpload>
+          <input
+            accept='image/*'
+            style={{ display: 'none' }}
+            id='img'
+            multiple
+            type='file'
+            name='img'
+            onChange={e => {
+              console.log('**', e.target.files);
+              setUploadedFile(e.target.files[0]);
+            }}
+          />
+          <label htmlFor='img'>
+            <Button variant='contained' color='primary' component='span'>
+              Choose An Image
+            </Button>
+          </label>
           <TextField
             autoFocus
             margin='dense'
@@ -120,6 +147,7 @@ const BlogForm = ({ editMode, blog = {} }) => {
             {editMode ? 'Save' : 'Post'}
           </Button>
         </DialogActions>
+        {/* </form> */}
       </Dialog>
     </div>
   );
