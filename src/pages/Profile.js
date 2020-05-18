@@ -80,8 +80,6 @@ const Profile = ({ isOpen, onToggle, userId }) => {
   };
   const checkProfileOwner = () => {
     if (user.id && userBlogs?.length) {
-      console.log('hi');
-
       return user.id !== userBlogs[0].author._id;
     }
     return false;

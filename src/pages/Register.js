@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { string, object, ref } from 'yup';
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -12,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core';
+
+import { setAuthUser } from '../actions/authActions';
 
 const useStyles = makeStyles(theme => ({
   bg: {
@@ -27,7 +30,12 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: theme.spacing(6)
+    padding: theme.spacing(6),
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(4),
+
+      maxHeight: '600px'
+    }
   },
   avatar: {
     margin: theme.spacing(2),
@@ -68,7 +76,7 @@ const Register = ({ history }) => {
     validationSchema: schema,
     mode: 'onBlur'
   });
-
+  const dispatch = useDispatch();
   const onSubmit = async data => {
     const { username, email, password } = data;
     const res = await axios.post('http://localhost:3000/user/register', {
@@ -76,13 +84,13 @@ const Register = ({ history }) => {
       email,
       password
     });
-    if (res.status === 200) history.replace('/');
 
-    // .then(res => {
-    //   console.log(res);
-    //   history.replace('/');
-    // })
-    // .catch(error => console.log('*', error));
+    if (res.status === 200) {
+      dispatch(setAuthUser(res.data.user));
+
+      localStorage.setItem('token', res.data.token);
+      history.replace('/');
+    }
   };
 
   return (

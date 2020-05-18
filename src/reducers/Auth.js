@@ -24,8 +24,6 @@ const authReducer = (state = initialState, action) => {
         ? followingList.filter(f => f !== userId)
         : [...state.user.followingList, action.payload];
 
-      console.log('from reducer', followers);
-
       return {
         ...state,
         user: {

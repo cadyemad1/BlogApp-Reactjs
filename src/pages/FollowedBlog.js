@@ -7,10 +7,13 @@ import React, {
 } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import Header from '../components/Header';
 import { Container } from '@material-ui/core';
-import BlogCard from '../components/BlogCard';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Hidden from '@material-ui/core/Hidden';
+
+import Header from '../components/Header';
+import BlogCard from '../components/BlogCard';
+import Menu from '../components/Menu';
 
 const FollowedBlog = () => {
   const limit = 3;
@@ -54,6 +57,9 @@ const FollowedBlog = () => {
   return (
     <Fragment>
       <Header />
+      <Hidden only={['md', 'lg']}>
+        <Menu />
+      </Hidden>
       <Container maxWidth='sm' style={{ marginTop: 30 }}>
         {followedUsersBlogs.map((blog, index) => {
           if (followedUsersBlogs.length === index + 1)

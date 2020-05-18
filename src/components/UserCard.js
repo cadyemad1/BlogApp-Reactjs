@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
+
 import Paper from '@material-ui/core/Paper';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -6,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import cx from 'clsx';
+
+import { setFollowers } from '../actions/authActions';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -29,21 +34,39 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserCard = () => {
+const UserCard = ({ user, newFollowerAdded }) => {
+  const [isFollowed, setIsFollowed] = useState(false);
+
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const manageFollow = () => {
+    setIsFollowed(!isFollowed);
+    newFollowerAdded();
+
+    if (user) {
+      dispatch(setFollowers(user._id));
+      axios.patch(`http://localhost:3000/user/${user._id}`);
+    }
+  };
+
   return (
     <Paper elevation={2} className={cx(classes.flex, classes.paper)}>
       <div className={classes.flex}>
         <Avatar variant='square' className={classes.avatar}>
-          C
+          {user.username.charAt(0)}
         </Avatar>
         <Typography component='h3' variant='h6'>
-          Cady Emad
+          {user.username}
         </Typography>
       </div>
 
-      <Button variant='contained' className={classes.btn}>
-        Follow
+      <Button
+        variant='contained'
+        className={classes.btn}
+        onClick={manageFollow}
+      >
+        {isFollowed ? 'Unfollow' : 'Follow'}
       </Button>
     </Paper>
   );

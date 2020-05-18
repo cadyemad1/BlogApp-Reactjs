@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 import moment from 'moment';
@@ -18,10 +19,12 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import Link from '@material-ui/core/Link';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
+import Chip from '@material-ui/core/Chip';
 
 import BlogForm from '../components/BlogForm';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { deleteBlog } from '../actions/blogActions';
+import { findByLabelText } from '@testing-library/react';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -53,6 +56,18 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       backgroundColor: theme.palette.secondary.main
     }
+  },
+  tags: {
+    backgroundColor: '#021834',
+    color: 'white',
+    padding: theme.spacing(1),
+    marginRight: '5px',
+    marginBottom: '2px'
+  },
+  tagsDiv: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
   }
 }));
 
@@ -60,12 +75,15 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
   const classes = useStyles();
   const user = useSelector(state => state.authUser.user);
   const [expanded, setExpanded] = useState(false);
-
+  const history = useHistory();
   const dispatch = useDispatch();
 
-  const { _id, title, body, author, createdAt, img } = blog;
+  const { _id, title, body, author, createdAt, img, tags } = blog;
 
   const openProfile = () => {
+    if (!user.length) {
+      history.push('/login');
+    }
     handleClick();
     getUserId(author._id);
   };
@@ -107,6 +125,7 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
           {title}
         </Typography>
       </CardContent>
+
       <CardActions disableSpacing>
         <IconButton title='add to favorites'>
           <FavoriteIcon />
@@ -141,6 +160,12 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
           <Typography paragraph>{body}</Typography>
+          <div className={classes.tagsDiv}>
+            {tags.length !== 0 &&
+              tags.map(tag => (
+                <Chip label={tag} key={tag} className={classes.tags} />
+              ))}
+          </div>
         </CardContent>
       </Collapse>
     </Card>
