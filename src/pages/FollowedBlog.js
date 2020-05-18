@@ -41,7 +41,7 @@ const FollowedBlog = () => {
   const getBlog = async () => {
     try {
       const { data } = await axios.get(
-        `${backendUrl}user/followed?page=${page}&limit=${limit}`
+        `${backendUrl}/user/followed?page=${page}&limit=${limit}`
       );
       setFollowedUsersBlogs(followedUsersBlogs.concat(...data));
       setLoading(false);

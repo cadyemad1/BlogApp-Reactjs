@@ -13,7 +13,7 @@ const RecommendedUsers = () => {
   const [newfollower, setNewFollower] = useState(false);
 
   const getUsers = async () => {
-    const { data } = await axios.get(`${backendUrl}user/recommendations`);
+    const { data } = await axios.get(`${backendUrl}/user/recommendations`);
     setUsers(data);
   };
   const newFollowerAdded = () => {
