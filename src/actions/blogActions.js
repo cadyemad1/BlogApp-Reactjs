@@ -30,7 +30,7 @@ export const fetchBlogs = (page, limit) => {
       console.log('-->', backendUrl);
 
       const { data } = await axios.get(
-        `${backendUrl}/blog/getBlogs?page=${page}&limit=${limit}`
+        `https://blogging-react-nodejs-app.herokuapp.com/blog/getBlogs?page=${page}&limit=${limit}`
       );
       dispatch(setBlogs(data));
       dispatch(setLoading(false));
