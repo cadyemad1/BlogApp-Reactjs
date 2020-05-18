@@ -6,7 +6,7 @@ import React, {
   useCallback
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchBlogs, setLoading } from '../actions/blogActions';
+import { fetchBlogs, resetBlogs } from '../actions/blogActions';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -15,12 +15,13 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import cx from 'clsx';
+import Hidden from '@material-ui/core/Hidden';
 
 import BlogCard from '../components/BlogCard';
-import UserCard from '../components/UserCard';
 import Header from '../components/Header';
 import Profile from './Profile';
+import RecommendedUsers from '../components/RecommendedUsers';
+import Menu from '../components/Menu';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,6 +31,11 @@ const useStyles = makeStyles(theme => ({
     width: '70%',
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4)
+  },
+  rec: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   }
 }));
 
@@ -44,6 +50,7 @@ const Home = () => {
   const blogs = useSelector(state => state.blogs.blogs);
   const loading = useSelector(state => state.blogs.loading);
   const hasMoreBlogs = useSelector(state => state.blogs.hasMoreBlogs);
+  const user = useSelector(state => state.authUser.user);
 
   const dispatch = useDispatch();
 
@@ -74,13 +81,23 @@ const Home = () => {
     dispatch(fetchBlogs(page, limit));
   }, [page]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(resetBlogs());
+    };
+  }, []);
   return (
     <Fragment>
-      {/* <Profile isOpen={isOpen} userId={userId} onToggle={handleClick} /> */}
+      {isOpen && (
+        <Profile isOpen={isOpen} userId={userId} onToggle={handleClick} />
+      )}
       <Header />
       <Container fixed className={classes.root}>
+        <Hidden only={['md', 'lg']}>
+          <Menu />
+        </Hidden>
         <Grid container justify='center'>
-          <Grid item xs={7}>
+          <Grid item xs={11} md={7}>
             {blogs.map((blog, index) => {
               if (blogs.length === index + 1)
                 return (
@@ -110,15 +127,11 @@ const Home = () => {
               />
             )}
           </Grid>
-          <Grid item xs={4}>
-            <Paper style={{ padding: 20 }}>
-              <Typography variant='h5'>Recomended Blogs</Typography>
-              <Divider />
-              <UserCard />
-              <UserCard />
-              <UserCard />
-            </Paper>
-          </Grid>
+          {user._id && (
+            <Grid item xs={0} md={4} className={classes.rec}>
+              <RecommendedUsers />
+            </Grid>
+          )}
         </Grid>
       </Container>
     </Fragment>
