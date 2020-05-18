@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { backendUrl } from '../config';
 
 export const setBlogs = blogs => ({
   type: 'SET_BLOGS',
@@ -27,7 +28,7 @@ export const fetchBlogs = (page, limit) => {
     dispatch(setLoading(true));
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/blog/getBlogs?page=${page}&limit=${limit}`
+        `${backendUrl}/blog/getBlogs?page=${page}&limit=${limit}`
       );
       dispatch(setBlogs(data));
       dispatch(setLoading(false));
@@ -43,7 +44,7 @@ export const searchBlogs = value => {
     dispatch(setLoading(true));
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/blog/search?searchquery=${value}`
+        `${backendUrl}/blog/search?searchquery=${value}`
       );
 
       dispatch(setFilteredBlogs(data));

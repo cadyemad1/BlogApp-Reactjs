@@ -6,6 +6,7 @@ import { string, object } from 'yup';
 import axios from 'axios';
 import axiosInterceptor from '../components/Interceptor/interceptor';
 
+import { backendUrl } from '../config';
 import { setAuthUser } from '../actions/authActions';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -72,7 +73,7 @@ const Login = props => {
   const dispatch = useDispatch();
   const onSubmit = async data => {
     const { email, password } = data;
-    const res = await axios.post('http://localhost:3000/user/login', {
+    const res = await axios.post(`${backendUrl}/user/login`, {
       email,
       password
     });

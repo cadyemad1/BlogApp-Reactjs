@@ -10,6 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import cx from 'clsx';
 
+import { backendUrl } from '../config';
 import { setFollowers } from '../actions/authActions';
 
 const useStyles = makeStyles(theme => ({
@@ -46,7 +47,7 @@ const UserCard = ({ user, newFollowerAdded }) => {
 
     if (user) {
       dispatch(setFollowers(user._id));
-      axios.patch(`http://localhost:3000/user/${user._id}`);
+      axios.patch(`${backendUrl}/user/${user._id}`);
     }
   };
 

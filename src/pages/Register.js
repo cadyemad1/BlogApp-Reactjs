@@ -14,6 +14,7 @@ import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core';
 
+import { backendUrl } from '../config';
 import { setAuthUser } from '../actions/authActions';
 
 const useStyles = makeStyles(theme => ({
@@ -79,7 +80,7 @@ const Register = ({ history }) => {
   const dispatch = useDispatch();
   const onSubmit = async data => {
     const { username, email, password } = data;
-    const res = await axios.post('http://localhost:3000/user/register', {
+    const res = await axios.post(`${backendUrl}/user/register`, {
       username,
       email,
       password

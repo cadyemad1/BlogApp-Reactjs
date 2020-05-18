@@ -5,6 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
+import { backendUrl } from '../config';
 import UserCard from '../components/UserCard';
 
 const RecommendedUsers = () => {
@@ -12,9 +13,7 @@ const RecommendedUsers = () => {
   const [newfollower, setNewFollower] = useState(false);
 
   const getUsers = async () => {
-    const { data } = await axios.get(
-      'http://localhost:3000/user/recommendations'
-    );
+    const { data } = await axios.get(`${backendUrl}/user/recommendations`);
     setUsers(data);
   };
   const newFollowerAdded = () => {

@@ -14,6 +14,7 @@ import {
 import cx from 'clsx';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
+import { backendUrl } from '../config';
 import BlogCard from '../components/BlogCard';
 import { setFollowers } from '../actions/authActions';
 
@@ -58,7 +59,7 @@ const Profile = ({ isOpen, onToggle, userId }) => {
   };
 
   const getProfile = async () => {
-    const { data } = await axios.get(`http://localhost:3000/user?id=${userId}`);
+    const { data } = await axios.get(`${backendUrl}/user?id=${userId}`);
     const { blogs, username, id } = data;
 
     const blogsByUser = blogs.map(blog => ({
@@ -75,7 +76,7 @@ const Profile = ({ isOpen, onToggle, userId }) => {
     const userId = userBlogs.length ? userBlogs[0].author._id : -1;
     if (userId !== -1) {
       dispatch(setFollowers(userId));
-      axios.patch(`http://localhost:3000/user/${userId}`);
+      axios.patch(`${backendUrl}/user/${userId}`);
     }
   };
   const checkProfileOwner = () => {

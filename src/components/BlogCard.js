@@ -21,10 +21,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
 import Chip from '@material-ui/core/Chip';
 
+import { backendUrl } from '../config';
 import BlogForm from '../components/BlogForm';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { deleteBlog } from '../actions/blogActions';
-import { findByLabelText } from '@testing-library/react';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -99,7 +99,7 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
 
   const onDeleteBlog = () => {
     dispatch(deleteBlog(_id));
-    axios.delete(`http://localhost:3000/blog/${_id}`);
+    axios.delete(`${backendUrl}/blog/${_id}`);
   };
 
   return (

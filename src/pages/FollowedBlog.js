@@ -11,6 +11,7 @@ import { Container } from '@material-ui/core';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Hidden from '@material-ui/core/Hidden';
 
+import { backendUrl } from '../config';
 import Header from '../components/Header';
 import BlogCard from '../components/BlogCard';
 import Menu from '../components/Menu';
@@ -40,7 +41,7 @@ const FollowedBlog = () => {
   const getBlog = async () => {
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/user/followed?page=${page}&limit=${limit}`
+        `${backendUrl}/user/followed?page=${page}&limit=${limit}`
       );
       setFollowedUsersBlogs(followedUsersBlogs.concat(...data));
       setLoading(false);

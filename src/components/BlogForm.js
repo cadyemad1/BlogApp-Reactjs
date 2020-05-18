@@ -14,6 +14,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 
+import { backendUrl } from '../config';
 import TagsInput from './TagsInput';
 import { updateBlogs } from '../actions/blogActions';
 
@@ -46,11 +47,11 @@ const BlogForm = ({ editMode, blog = {} }) => {
       if (blogTags.length) data.append('tags', blogTags);
       data.append('img', uploadedFile);
 
-      axios.post('http://localhost:3000/blog/addBlog', data, {
+      axios.post(`${backendUrl}/blog/addBlog`, data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
     } else {
-      axios.patch(`http://localhost:3000/blog/${blog._id}`, {
+      axios.patch(`${backendUrl}/blog/${blog._id}`, {
         title: blogTitle,
         body: blogBody,
         tags: blogTags
