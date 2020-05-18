@@ -1,11 +1,9 @@
-import React, { Fragment } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from 'react-router-dom';
+import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+
+import Hidden from '@material-ui/core/Hidden';
+
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Header from './components/Header';
@@ -13,6 +11,9 @@ import Home from './pages/Home';
 import { makeStyles } from '@material-ui/core/styles';
 import FollowedBlog from './pages/FollowedBlog';
 import Search from './pages/Search';
+import PrivateRoute from './components/PrivateRoute';
+import NotFound from './components/NotFound';
+import Menu from './components/Menu';
 
 const useStyles = makeStyles(theme => ({
   bg: {
@@ -31,12 +32,14 @@ const App = () => {
   return (
     <div className={classes.bg}>
       <ToastContainer />
+
       <Switch>
         <Route path='/' exact component={Home} />
         <Route path='/sign-up' exact component={Register} />
         <Route path='/login' exact component={Login} />
-        <Route path='/followed' exact component={FollowedBlog} />
-        <Route path='/search' exact component={Search} />
+        <PrivateRoute path='/followed' exact component={FollowedBlog} />
+        <PrivateRoute path='/search' exact component={Search} />
+        <Route path='*' component={NotFound} />
       </Switch>
     </div>
   );
