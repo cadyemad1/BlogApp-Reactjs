@@ -47,7 +47,7 @@ const UserCard = ({ user, newFollowerAdded }) => {
 
     if (user) {
       dispatch(setFollowers(user._id));
-      axios.patch(`${backendUrl}/user/${user._id}`);
+      axios.patch(`${backendUrl}user/${user._id}`);
     }
   };
 

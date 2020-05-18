@@ -59,7 +59,7 @@ const Profile = ({ isOpen, onToggle, userId }) => {
   };
 
   const getProfile = async () => {
-    const { data } = await axios.get(`${backendUrl}/user?id=${userId}`);
+    const { data } = await axios.get(`${backendUrl}user?id=${userId}`);
     const { blogs, username, id } = data;
 
     const blogsByUser = blogs.map(blog => ({
@@ -76,7 +76,7 @@ const Profile = ({ isOpen, onToggle, userId }) => {
     const userId = userBlogs.length ? userBlogs[0].author._id : -1;
     if (userId !== -1) {
       dispatch(setFollowers(userId));
-      axios.patch(`${backendUrl}/user/${userId}`);
+      axios.patch(`${backendUrl}user/${userId}`);
     }
   };
   const checkProfileOwner = () => {

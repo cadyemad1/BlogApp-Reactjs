@@ -47,11 +47,11 @@ const BlogForm = ({ editMode, blog = {} }) => {
       if (blogTags.length) data.append('tags', blogTags);
       data.append('img', uploadedFile);
 
-      axios.post(`${backendUrl}/blog/addBlog`, data, {
+      axios.post(`${backendUrl}blog/addBlog`, data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
     } else {
-      axios.patch(`${backendUrl}/blog/${blog._id}`, {
+      axios.patch(`${backendUrl}blog/${blog._id}`, {
         title: blogTitle,
         body: blogBody,
         tags: blogTags

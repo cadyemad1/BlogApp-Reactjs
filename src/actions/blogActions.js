@@ -27,8 +27,10 @@ export const fetchBlogs = (page, limit) => {
   return async dispatch => {
     dispatch(setLoading(true));
     try {
+      console.log('-->', backendUrl);
+
       const { data } = await axios.get(
-        `${backendUrl}/blog/getBlogs?page=${page}&limit=${limit}`
+        `${backendUrl}blog/getBlogs?page=${page}&limit=${limit}`
       );
       dispatch(setBlogs(data));
       dispatch(setLoading(false));
@@ -44,7 +46,7 @@ export const searchBlogs = value => {
     dispatch(setLoading(true));
     try {
       const { data } = await axios.get(
-        `${backendUrl}/blog/search?searchquery=${value}`
+        `${backendUrl}blog/search?searchquery=${value}`
       );
 
       dispatch(setFilteredBlogs(data));

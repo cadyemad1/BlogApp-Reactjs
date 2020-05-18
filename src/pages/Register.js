@@ -80,7 +80,7 @@ const Register = ({ history }) => {
   const dispatch = useDispatch();
   const onSubmit = async data => {
     const { username, email, password } = data;
-    const res = await axios.post(`${backendUrl}/user/register`, {
+    const res = await axios.post(`${backendUrl}user/register`, {
       username,
       email,
       password

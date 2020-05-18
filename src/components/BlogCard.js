@@ -99,7 +99,7 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
 
   const onDeleteBlog = () => {
     dispatch(deleteBlog(_id));
-    axios.delete(`${backendUrl}/blog/${_id}`);
+    axios.delete(`${backendUrl}blog/${_id}`);
   };
 
   return (

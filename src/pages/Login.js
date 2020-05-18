@@ -73,7 +73,7 @@ const Login = props => {
   const dispatch = useDispatch();
   const onSubmit = async data => {
     const { email, password } = data;
-    const res = await axios.post(`${backendUrl}/user/login`, {
+    const res = await axios.post(`${backendUrl}user/login`, {
       email,
       password
     });
