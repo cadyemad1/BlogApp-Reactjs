@@ -42,7 +42,6 @@ const TagsInput = ({ selectedTags, tagsArr }) => {
   return (
     <div>
       <TextField
-        autoFocus
         margin='dense'
         id='tags'
         label='Blog Tags'

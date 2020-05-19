@@ -27,8 +27,6 @@ export const fetchBlogs = (page, limit) => {
   return async dispatch => {
     dispatch(setLoading(true));
     try {
-      console.log('-->', backendUrl);
-
       const { data } = await axios.get(
         `${backendUrl}/blog/getBlogs?page=${page}&limit=${limit}`
       );

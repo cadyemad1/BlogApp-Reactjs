@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
+import axios from 'axios';
 
 import Hidden from '@material-ui/core/Hidden';
 
@@ -13,7 +15,10 @@ import FollowedBlog from './pages/FollowedBlog';
 import Search from './pages/Search';
 import PrivateRoute from './components/PrivateRoute';
 import NotFound from './components/NotFound';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Menu from './components/Menu';
+import { backendUrl } from './config';
+import { setAuthUser } from './actions/authActions';
 
 const useStyles = makeStyles(theme => ({
   bg: {
@@ -29,18 +34,40 @@ const useStyles = makeStyles(theme => ({
 
 const App = () => {
   const classes = useStyles();
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  const getUser = async () => {
+    const { data } = await axios.get(`${backendUrl}/user/verify`);
+    setLoading(false);
+    if (data) {
+      dispatch(setAuthUser(data));
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
     <div className={classes.bg}>
       <ToastContainer />
-
-      <Switch>
-        <Route path='/' exact component={Home} />
-        <Route path='/sign-up' exact component={Register} />
-        <Route path='/login' exact component={Login} />
-        <PrivateRoute path='/followed' exact component={FollowedBlog} />
-        <PrivateRoute path='/search' exact component={Search} />
-        <Route path='*' component={NotFound} />
-      </Switch>
+      {loading ? (
+        <LinearProgress
+          variant='query'
+          color='secondary'
+          className={classes.loading}
+        />
+      ) : (
+        <Switch>
+          <Route path='/' exact component={Home} />
+          <Route path='/sign-up' exact component={Register} />
+          <Route path='/login' exact component={Login} />
+          <PrivateRoute path='/followed' exact component={FollowedBlog} />
+          <PrivateRoute path='/search' exact component={Search} />
+          <Route path='*' component={NotFound} />
+        </Switch>
+      )}
     </div>
   );
 };

@@ -17,16 +17,12 @@ const RecommendedUsers = () => {
     setUsers(data);
   };
   const newFollowerAdded = () => {
-    console.log('here');
-
     setNewFollower(true);
   };
 
   useEffect(() => {
     getUsers();
   }, [newfollower]);
-
-  console.log('users from rec->', users);
 
   return (
     <Paper style={{ padding: 20 }}>
