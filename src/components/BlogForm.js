@@ -17,26 +17,42 @@ import EditIcon from '@material-ui/icons/Edit';
 import { backendUrl } from '../config';
 import TagsInput from './TagsInput';
 import { updateBlogs } from '../actions/blogActions';
+import { ValidationError } from 'yup';
 
 const BlogForm = ({ editMode, blog = {} }) => {
-  const [blogTitle, setBlogTitle] = useState(
-    blog.title || 'Insert Your Blog Title'
-  );
-  const [blogBody, setBlogBody] = useState(
-    blog.body || 'Insert Your Blog Body'
-  );
+  const [blogTitle, setBlogTitle] = useState(blog.title || '');
+  const [blogBody, setBlogBody] = useState(blog.body || '');
   const [blogTags, setBlogTags] = useState([]);
+  const [error, setError] = useState([]);
   const [open, setOpen] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const user = useSelector(state => state.authUser.user);
-  // const { _id } = user;
+  const [uploadedFile, setUploadedFile] = useState({});
 
   const handleClick = () => {
     setOpen(!open);
+    setBlogTitle('');
+    setBlogBody('');
   };
 
   const onSelectTags = tags => setBlogTags(tags);
+
+  const validate = e => {
+    if (e.target.value === '') {
+      setError([...error, e.target.id]);
+    }
+  };
+  const onChangeInput = e => {
+    const id = e.target.id;
+    if (e.target.value === '') {
+      validate(e);
+    }
+    if (e.target.value !== '') {
+      setIsSubmitting(true);
+      setError(error.filter(e => e !== id));
+    }
+    id === 'title' ? setBlogTitle(e.target.value) : setBlogBody(e.target.value);
+  };
 
   const onSubmit = () => {
     handleClick();
@@ -61,6 +77,7 @@ const BlogForm = ({ editMode, blog = {} }) => {
 
   return (
     <div>
+      {console.log('error->', error)}
       {editMode ? (
         <IconButton title='edit post' onClick={handleClick}>
           <EditIcon />
@@ -94,31 +111,33 @@ const BlogForm = ({ editMode, blog = {} }) => {
             </Button>
           </label>
           <TextField
-            autoFocus
             margin='dense'
             id='title'
             label='Blog Title'
             type='text'
             value={blogTitle}
-            onChange={e => setBlogTitle(e.target.value)}
-            error={blogTitle === ''}
+            onChange={onChangeInput}
+            onBlur={validate}
+            error={error.includes('title')}
             helperText={
-              blogTitle === '' ? 'You must provide a title for field' : ' '
+              error.includes('title')
+                ? 'You must provide a title for field'
+                : ' '
             }
             fullWidth
           />
 
           <TextField
-            autoFocus
             margin='dense'
             id='body'
             label='Blog Body'
             type='text'
             value={blogBody}
-            onChange={e => setBlogBody(e.target.value)}
-            error={blogBody === ''}
+            onChange={onChangeInput}
+            onBlur={validate}
+            error={error.includes('body')}
             helperText={
-              blogBody === '' ? 'You must provide a body for field' : ' '
+              error.includes('body') ? 'You must provide a body for field' : ' '
             }
             fullWidth
           />
@@ -128,7 +147,11 @@ const BlogForm = ({ editMode, blog = {} }) => {
           <Button onClick={handleClick} color='primary'>
             Cancel
           </Button>
-          <Button onClick={onSubmit} color='primary'>
+          <Button
+            onClick={onSubmit}
+            color='primary'
+            disabled={!isSubmitting || error.length > 0}
+          >
             {editMode ? 'Save' : 'Post'}
           </Button>
         </DialogActions>
