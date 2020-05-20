@@ -23,6 +23,15 @@ export const hasMoreBlogs = flag => ({
   payload: flag
 });
 
+export const addBlog = blog => ({
+  type: 'ADD_BLOG',
+  payload: blog
+});
+
+export const updateBlog = blog => ({
+  type: 'UPDATE_BLOG',
+  payload: blog
+});
 export const fetchBlogs = (page, limit) => {
   return async dispatch => {
     dispatch(setLoading(true));

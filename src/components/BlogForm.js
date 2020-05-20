@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
 import FileUpload from './FileUpload';
@@ -16,23 +16,35 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import { backendUrl } from '../config';
 import TagsInput from './TagsInput';
-import { updateBlogs } from '../actions/blogActions';
+import { updateBlog, addBlog } from '../actions/blogActions';
 import { ValidationError } from 'yup';
 
 const BlogForm = ({ editMode, blog = {} }) => {
   const [blogTitle, setBlogTitle] = useState(blog.title || '');
   const [blogBody, setBlogBody] = useState(blog.body || '');
   const [blogTags, setBlogTags] = useState([]);
+  const [uploadedFile, setUploadedFile] = useState({});
+  const [imgPreview, setImgPreview] = useState();
   const [error, setError] = useState([]);
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [filedata, setFileData] = useState();
 
-  const [uploadedFile, setUploadedFile] = useState({});
+  const dispatch = useDispatch();
+
+  const inputEl = useRef(null);
 
   const handleClick = () => {
     setOpen(!open);
-    setBlogTitle('');
-    setBlogBody('');
+    if (!editMode) {
+      setBlogTitle('');
+      setBlogBody('');
+      setUploadedFile('');
+      setImgPreview('');
+      setBlogTags('');
+      setError([]);
+      setIsSubmitting(false);
+    }
   };
 
   const onSelectTags = tags => setBlogTags(tags);
@@ -54,30 +66,49 @@ const BlogForm = ({ editMode, blog = {} }) => {
     id === 'title' ? setBlogTitle(e.target.value) : setBlogBody(e.target.value);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async e => {
     handleClick();
     if (!editMode) {
-      const data = new FormData();
-      data.append('title', blogTitle);
-      data.append('body', blogBody);
-      if (blogTags.length) data.append('tags', blogTags);
-      data.append('img', uploadedFile);
-
-      axios.post(`${backendUrl}/blog/addBlog`, data, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const { data } = await axios.post(
+        `${backendUrl}/blog/addBlog`,
+        filedata,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        }
+      );
+      dispatch(addBlog(data.blog));
     } else {
-      axios.patch(`${backendUrl}/blog/${blog._id}`, {
-        title: blogTitle,
-        body: blogBody,
-        tags: blogTags
-      });
+      const { data } = await axios.patch(
+        `${backendUrl}/blog/${blog._id}`,
+        filedata,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        }
+      );
+
+      dispatch(updateBlog(data.blog));
     }
   };
+  const onBlurInput = e => {
+    validate(e);
+    inputEl.current.focus();
+  };
+  const handleChange = e => {
+    setImgPreview(URL.createObjectURL(e.target.files[0]));
+    setUploadedFile(e.target.files[0]);
+  };
+
+  useEffect(() => {
+    const fd = new FormData();
+    fd.append('title', blogTitle);
+    fd.append('body', blogBody);
+    if (blogTags.length) fd.append('tags', blogTags);
+    fd.append('img', uploadedFile);
+    setFileData(fd);
+  }, [blogTitle, blogBody, blogTags, uploadedFile]);
 
   return (
     <div>
-      {console.log('error->', error)}
       {editMode ? (
         <IconButton title='edit post' onClick={handleClick}>
           <EditIcon />
@@ -92,24 +123,21 @@ const BlogForm = ({ editMode, blog = {} }) => {
         <DialogTitle id='form-dialog-title'>
           {editMode ? 'Edit Blog' : 'Post Blog'}
         </DialogTitle>
-        {/* <form> */}
         <DialogContent>
           <input
             accept='image/*'
             style={{ display: 'none' }}
             id='img'
-            multiple
             type='file'
             name='img'
-            onChange={e => {
-              setUploadedFile(e.target.files[0]);
-            }}
+            onChange={handleChange}
           />
           <label htmlFor='img'>
-            <Button variant='contained' color='primary' component='span'>
+            <Button variant='contained' color='secondary' component='span'>
               Choose An Image
             </Button>
           </label>
+          <img src={imgPreview || 'placeholder.png'} width='200' height='200' />
           <TextField
             margin='dense'
             id='title'
@@ -117,11 +145,11 @@ const BlogForm = ({ editMode, blog = {} }) => {
             type='text'
             value={blogTitle}
             onChange={onChangeInput}
-            onBlur={validate}
+            onBlur={onBlurInput}
             error={error.includes('title')}
             helperText={
               error.includes('title')
-                ? 'You must provide a title for field'
+                ? 'You must provide a title for blog'
                 : ' '
             }
             fullWidth
@@ -137,9 +165,10 @@ const BlogForm = ({ editMode, blog = {} }) => {
             onBlur={validate}
             error={error.includes('body')}
             helperText={
-              error.includes('body') ? 'You must provide a body for field' : ' '
+              error.includes('body') ? 'You must provide a body for blog' : ' '
             }
             fullWidth
+            inputRef={inputEl}
           />
           <TagsInput selectedTags={onSelectTags} tagsArr={blog.tags} />
         </DialogContent>
@@ -155,7 +184,6 @@ const BlogForm = ({ editMode, blog = {} }) => {
             {editMode ? 'Save' : 'Post'}
           </Button>
         </DialogActions>
-        {/* </form> */}
       </Dialog>
     </div>
   );

@@ -16,6 +16,17 @@ const blogReducer = (state = initialState, action) => {
     case 'RESET_BLOGS':
       return { ...state, blogs: [] };
 
+    case 'ADD_BLOG':
+      return { ...state, blogs: [action.payload, ...state.blogs] };
+
+    case 'UPDATE_BLOG':
+      const blogs = state.blogs.map(blog => {
+        return blog._id !== action.payload.id
+          ? blog
+          : { ...blog, ...action.payload };
+      });
+      return { ...state, blogs };
+
     case 'SET_FILTERED_BLOGS':
       return {
         ...state,
