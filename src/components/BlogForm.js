@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
-import FileUpload from './FileUpload';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -17,7 +16,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import { backendUrl } from '../config';
 import TagsInput from './TagsInput';
 import { updateBlog, addBlog } from '../actions/blogActions';
-import { ValidationError } from 'yup';
 
 const BlogForm = ({ editMode, blog = {} }) => {
   const [blogTitle, setBlogTitle] = useState(blog.title || '');
@@ -36,15 +34,13 @@ const BlogForm = ({ editMode, blog = {} }) => {
 
   const handleClick = () => {
     setOpen(!open);
-    if (!editMode) {
-      setBlogTitle('');
-      setBlogBody('');
-      setUploadedFile('');
-      setImgPreview('');
-      setBlogTags('');
-      setError([]);
-      setIsSubmitting(false);
-    }
+    setBlogTitle(blog.title || '');
+    setBlogBody(blog.body || '');
+    setUploadedFile('');
+    setImgPreview('');
+    setBlogTags('');
+    setError([]);
+    setIsSubmitting(false);
   };
 
   const onSelectTags = tags => setBlogTags(tags);
@@ -89,10 +85,12 @@ const BlogForm = ({ editMode, blog = {} }) => {
       dispatch(updateBlog(data.blog));
     }
   };
+
   const onBlurInput = e => {
     validate(e);
     inputEl.current.focus();
   };
+
   const handleChange = e => {
     setImgPreview(URL.createObjectURL(e.target.files[0]));
     setUploadedFile(e.target.files[0]);
@@ -102,8 +100,8 @@ const BlogForm = ({ editMode, blog = {} }) => {
     const fd = new FormData();
     fd.append('title', blogTitle);
     fd.append('body', blogBody);
-    if (blogTags.length) fd.append('tags', blogTags);
-    fd.append('img', uploadedFile);
+    fd.append('tags', blogTags);
+    if (!editMode) fd.append('img', uploadedFile);
     setFileData(fd);
   }, [blogTitle, blogBody, blogTags, uploadedFile]);
 
@@ -131,6 +129,7 @@ const BlogForm = ({ editMode, blog = {} }) => {
             type='file'
             name='img'
             onChange={handleChange}
+            required
           />
           <label htmlFor='img'>
             <Button variant='contained' color='secondary' component='span'>

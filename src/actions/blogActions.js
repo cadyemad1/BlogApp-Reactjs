@@ -59,8 +59,7 @@ export const searchBlogs = value => {
       dispatch(setFilteredBlogs(data));
       dispatch(setLoading(false));
     } catch (err) {
-      // dispatch(hasMoreBlogs(false));
-      // dispatch(setLoading(false));
+      dispatch(setLoading(false));
     }
   };
 };

@@ -11,6 +11,17 @@ const blogReducer = (state = initialState, action) => {
       return { ...state, loading: action.payload };
 
     case 'SET_BLOGS':
+      if (state.blogs.length) {
+        const res = action.payload.reduce(
+          (acc, el) => {
+            return state.blogs.findIndex(blog => blog._id === el._id) !== -1
+              ? state.blogs
+              : [...acc, el];
+          },
+          [...state.blogs]
+        );
+        return { ...state, blogs: res };
+      }
       return { ...state, blogs: [...state.blogs, ...action.payload] };
 
     case 'RESET_BLOGS':
@@ -30,6 +41,7 @@ const blogReducer = (state = initialState, action) => {
     case 'SET_FILTERED_BLOGS':
       return {
         ...state,
+        hasMoreBlogs: true,
         filteredBlogs: [...action.payload]
       };
     case 'HAS_MORE_BLOGS':
@@ -38,7 +50,10 @@ const blogReducer = (state = initialState, action) => {
     case 'DELETE_BLOG':
       return {
         ...state,
-        blogs: state.blogs.filter(blog => blog._id !== action.payload)
+        blogs: state.blogs.filter(blog => blog._id !== action.payload),
+        filteredBlogs: state.filteredBlogs.filter(
+          blog => blog._id !== action.payload
+        )
       };
 
     default:

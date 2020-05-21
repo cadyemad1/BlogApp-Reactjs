@@ -115,9 +115,6 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
           subheader={moment(createdAt).format('MMMM D, YYYY')}
           onClick={openProfile}
         />
-        {/* <Button variant='contained' size='small' className={classes.btn}>
-          Unfollow
-        </Button> */}
       </Grid>
       <CardMedia className={classes.media} image={img} title='Blog image' />
       <CardContent>
