@@ -20,7 +20,7 @@ import { updateBlog, addBlog } from '../actions/blogActions';
 const BlogForm = ({ editMode, blog = {} }) => {
   const [blogTitle, setBlogTitle] = useState(blog.title || '');
   const [blogBody, setBlogBody] = useState(blog.body || '');
-  const [blogTags, setBlogTags] = useState([]);
+  const [blogTags, setBlogTags] = useState(blog.tags || []);
   const [uploadedFile, setUploadedFile] = useState({});
   const [imgPreview, setImgPreview] = useState();
   const [error, setError] = useState([]);
@@ -38,7 +38,7 @@ const BlogForm = ({ editMode, blog = {} }) => {
     setBlogBody(blog.body || '');
     setUploadedFile('');
     setImgPreview('');
-    setBlogTags('');
+    setBlogTags([]);
     setError([]);
     setIsSubmitting(false);
   };
@@ -100,7 +100,9 @@ const BlogForm = ({ editMode, blog = {} }) => {
     const fd = new FormData();
     fd.append('title', blogTitle);
     fd.append('body', blogBody);
-    fd.append('tags', blogTags);
+    for (let i = 0; i < blogTags.length; i++) {
+      if (blogTags.length) fd.append('tags', blogTags[i]);
+    }
     if (!editMode) fd.append('img', uploadedFile);
     setFileData(fd);
   }, [blogTitle, blogBody, blogTags, uploadedFile]);
