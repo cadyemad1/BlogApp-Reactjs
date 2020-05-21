@@ -12,12 +12,25 @@ import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Create';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { backendUrl } from '../config';
 import TagsInput from './TagsInput';
 import { updateBlog, addBlog } from '../actions/blogActions';
 
+const useStyles = makeStyles(theme => ({
+  image: {
+    height: '150px',
+    width: '250px',
+    border: ' 1px solid gray',
+    display: 'block',
+    marginLeft: '75px',
+    marginTop: '20px'
+  }
+}));
+
 const BlogForm = ({ editMode, blog = {} }) => {
+  const classes = useStyles();
   const [blogTitle, setBlogTitle] = useState(blog.title || '');
   const [blogBody, setBlogBody] = useState(blog.body || '');
   const [blogTags, setBlogTags] = useState(blog.tags || []);
@@ -138,7 +151,11 @@ const BlogForm = ({ editMode, blog = {} }) => {
               Choose An Image
             </Button>
           </label>
-          <img src={imgPreview || 'placeholder.png'} width='200' height='200' />
+          <img
+            src={imgPreview || 'placeholder.png'}
+            className={classes.image}
+            alt='Blog image'
+          />
           <TextField
             margin='dense'
             id='title'

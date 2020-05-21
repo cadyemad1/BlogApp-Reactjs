@@ -30,12 +30,12 @@ const useStyles = makeStyles(theme => ({
   root: {
     maxWidth: 600,
     padding: theme.spacing(1),
-    // marginTop: theme.spacing(4),
     marginBottom: theme.spacing(2)
   },
   media: {
-    height: 0,
-    paddingTop: '56.25%' // 16:9
+    height: 200,
+    width: 500,
+    backgroundSize: 'contain'
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -73,15 +73,16 @@ const useStyles = makeStyles(theme => ({
 
 const BlogCard = ({ handleClick, getUserId, blog }) => {
   const classes = useStyles();
-  const user = useSelector(state => state.authUser.user);
-  const [expanded, setExpanded] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
+  const user = useSelector(state => state.authUser.user);
+  const [expanded, setExpanded] = useState(false);
+  const [favorite, setFavorite] = useState(false);
 
   const { _id, title, body, author, createdAt, img, tags } = blog;
 
   const openProfile = () => {
-    if (!user.length) {
+    if (!user._id) {
       history.push('/login');
     }
     handleClick();
@@ -101,6 +102,8 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
     dispatch(deleteBlog(_id));
     axios.delete(`${backendUrl}/blog/${_id}`);
   };
+
+  const favoriteBlog = () => setFavorite(!favorite);
 
   return (
     <Card className={classes.root}>
@@ -124,8 +127,8 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
       </CardContent>
 
       <CardActions disableSpacing>
-        <IconButton title='add to favorites'>
-          <FavoriteIcon />
+        <IconButton title='add to favorites' onClick={favoriteBlog}>
+          <FavoriteIcon color={favorite ? 'secondary' : ''} />
         </IconButton>
         {checkUser() ? (
           <Fragment>

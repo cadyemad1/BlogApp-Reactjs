@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import { Switch, Route } from 'react-router-dom';
 import axios from 'axios';
 
-import Hidden from '@material-ui/core/Hidden';
-
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Header from './components/Header';
 import Home from './pages/Home';
 import { makeStyles } from '@material-ui/core/styles';
 import FollowedBlog from './pages/FollowedBlog';
@@ -16,7 +13,6 @@ import Search from './pages/Search';
 import PrivateRoute from './components/PrivateRoute';
 import NotFound from './components/NotFound';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Menu from './components/Menu';
 import { backendUrl } from './config';
 import { setAuthUser } from './actions/authActions';
 

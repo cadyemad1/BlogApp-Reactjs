@@ -6,7 +6,6 @@ import React, {
   useCallback
 } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
 import { Container } from '@material-ui/core';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Hidden from '@material-ui/core/Hidden';

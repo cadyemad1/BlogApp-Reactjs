@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import BlogForm from './BlogForm';
 import Search from './Search';
@@ -87,19 +88,25 @@ const Header = () => {
                 <Fragment>
                   <div className={classes.sectionDesktop}>
                     <Link to='/'>
-                      <IconButton className={classes.color}>
-                        <HomeIcon />
-                      </IconButton>
+                      <Tooltip title='Home'>
+                        <IconButton className={classes.color}>
+                          <HomeIcon />
+                        </IconButton>
+                      </Tooltip>
                     </Link>
                     <Link to='/followed'>
-                      <IconButton className={classes.color}>
-                        <ExploreIcon />
-                      </IconButton>
+                      <Tooltip title='Explore followed'>
+                        <IconButton className={classes.color}>
+                          <ExploreIcon />
+                        </IconButton>
+                      </Tooltip>
                     </Link>
                     <Link to='/' onClick={Logout}>
-                      <IconButton className={classes.color}>
-                        <ExitToAppIcon />
-                      </IconButton>
+                      <Tooltip title='Logout'>
+                        <IconButton className={classes.color}>
+                          <ExitToAppIcon />
+                        </IconButton>
+                      </Tooltip>
                     </Link>
                   </div>
                   <BlogForm />
