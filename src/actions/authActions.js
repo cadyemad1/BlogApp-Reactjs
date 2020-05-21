@@ -7,3 +7,7 @@ export const setFollowers = userId => ({
   type: 'SET_FOLLOWERS',
   payload: userId
 });
+
+export const logout = () => ({
+  type: 'LOGOUT'
+});

@@ -12,6 +12,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 
 import BlogForm from './BlogForm';
+import { logout } from '../actions/authActions';
 
 const useStyles = makeStyles(theme => ({
   menu: {
@@ -55,9 +56,14 @@ const Menu = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const user = useSelector(state => state.authUser.user);
+  const dispatch = useDispatch();
 
   const handleMenu = () => {
     setOpen(!open);
+  };
+
+  const Logout = () => {
+    dispatch(logout());
   };
 
   return (
@@ -91,6 +97,11 @@ const Menu = () => {
               <ListItem button className={classes.listItem}>
                 <Link to='/followed' className={classes.link}>
                   Followed Blogs
+                </Link>
+              </ListItem>
+              <ListItem button className={classes.listItem}>
+                <Link to='/' onClick={Logout} className={classes.link}>
+                  Logout
                 </Link>
               </ListItem>
               <div className={classes.form}>

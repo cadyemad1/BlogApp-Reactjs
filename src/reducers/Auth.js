@@ -31,6 +31,18 @@ const authReducer = (state = initialState, action) => {
           followingList: followers
         }
       };
+
+    case 'LOGOUT':
+      localStorage.removeItem('token');
+      return {
+        isAuthenticated: false,
+        user: {
+          username: '',
+          email: '',
+          followingList: [],
+          password: ''
+        }
+      };
     default:
       return state;
   }

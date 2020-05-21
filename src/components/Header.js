@@ -2,11 +2,11 @@ import React, { useState, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchBlogs } from '../actions/blogActions';
 
 import { makeStyles } from '@material-ui/core/styles';
 import HomeIcon from '@material-ui/icons/Home';
 import ExploreIcon from '@material-ui/icons/Explore';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,6 +16,8 @@ import Hidden from '@material-ui/core/Hidden';
 
 import BlogForm from './BlogForm';
 import Search from './Search';
+import { searchBlogs } from '../actions/blogActions';
+import { logout } from '../actions/authActions';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -67,7 +69,9 @@ const Header = () => {
     dispatch(searchBlogs(value));
     history.push('/search');
   };
-
+  const Logout = () => {
+    dispatch(logout());
+  };
   return (
     <div className={classes.grow}>
       <AppBar position='static' className={classes.navbar} elevation={4}>
@@ -90,6 +94,11 @@ const Header = () => {
                     <Link to='/followed'>
                       <IconButton className={classes.color}>
                         <ExploreIcon />
+                      </IconButton>
+                    </Link>
+                    <Link to='/' onClick={Logout}>
+                      <IconButton className={classes.color}>
+                        <ExitToAppIcon />
                       </IconButton>
                     </Link>
                   </div>
