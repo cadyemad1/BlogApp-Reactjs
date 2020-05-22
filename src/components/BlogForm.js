@@ -27,7 +27,11 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     marginLeft: '115px',
     marginTop: '20px',
-    marginBottom: '20px'
+    marginBottom: '20px',
+    [theme.breakpoints.down('sm')]: {
+      width: '80px',
+      height: '80px'
+    }
   }
 }));
 

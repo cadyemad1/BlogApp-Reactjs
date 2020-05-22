@@ -39,7 +39,10 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     width: 650,
-    padding: theme.spacing(4)
+    padding: theme.spacing(4),
+    [theme.breakpoints.down('sm')]: {
+      width: '375px'
+    }
   },
   avatar: {
     width: theme.spacing(7),
