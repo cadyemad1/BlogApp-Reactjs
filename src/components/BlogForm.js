@@ -13,6 +13,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
 
 import { backendUrl } from '../config';
 import TagsInput from './TagsInput';
@@ -22,10 +23,11 @@ const useStyles = makeStyles(theme => ({
   image: {
     height: '150px',
     width: '250px',
-    border: ' 1px solid gray',
+    border: ' 1px solid transparent',
     display: 'block',
-    marginLeft: '75px',
-    marginTop: '20px'
+    marginLeft: '115px',
+    marginTop: '20px',
+    marginBottom: '20px'
   }
 }));
 
@@ -110,13 +112,17 @@ const BlogForm = ({ editMode, blog = {} }) => {
   };
 
   useEffect(() => {
+    setImgPreview(blog.img);
+  }, [open]);
+
+  useEffect(() => {
     const fd = new FormData();
     fd.append('title', blogTitle);
     fd.append('body', blogBody);
     for (let i = 0; i < blogTags.length; i++) {
       if (blogTags.length) fd.append('tags', blogTags[i]);
     }
-    if (!editMode) fd.append('img', uploadedFile);
+    fd.append('img', uploadedFile);
     setFileData(fd);
   }, [blogTitle, blogBody, blogTags, uploadedFile]);
 
@@ -136,6 +142,7 @@ const BlogForm = ({ editMode, blog = {} }) => {
         <DialogTitle id='form-dialog-title'>
           {editMode ? 'Edit Blog' : 'Post Blog'}
         </DialogTitle>
+        <Divider />
         <DialogContent>
           <input
             accept='image/*'
@@ -146,16 +153,16 @@ const BlogForm = ({ editMode, blog = {} }) => {
             onChange={handleChange}
             required
           />
-          <label htmlFor='img'>
-            <Button variant='contained' color='secondary' component='span'>
-              Choose An Image
-            </Button>
-          </label>
           <img
             src={imgPreview || 'placeholder.png'}
             className={classes.image}
             alt='Blog image'
           />
+          <label htmlFor='img'>
+            <Button variant='contained' color='secondary' component='span'>
+              Choose An Image
+            </Button>
+          </label>
           <TextField
             margin='dense'
             id='title'
