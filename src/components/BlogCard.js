@@ -33,8 +33,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2)
   },
   media: {
-    height: 200,
-    width: 500,
+    height: 0,
+    paddingTop: '56.25%',
     backgroundSize: 'contain'
   },
   expand: {
