@@ -26,7 +26,7 @@ const RecommendedUsers = () => {
 
   return (
     <Paper style={{ padding: 20 }}>
-      <Typography variant='h5'>Recomended Blogs</Typography>
+      <Typography variant='h5'>Recomended Users</Typography>
       <Divider />
       {users.map(user => (
         <UserCard

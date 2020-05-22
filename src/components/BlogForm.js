@@ -172,7 +172,6 @@ const BlogForm = ({ editMode, blog = {} }) => {
             }
             fullWidth
           />
-
           <TextField
             margin='dense'
             id='body'

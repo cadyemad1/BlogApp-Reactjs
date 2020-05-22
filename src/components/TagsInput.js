@@ -27,7 +27,7 @@ const TagsInput = ({ selectedTags, tagsArr }) => {
   const [tags, setTags] = useState(tagsArr || []);
 
   const addTags = e => {
-    if ((e.key === 'Enter' || e.keyCode === 32) && e.target.value !== '') {
+    if (e.key === 'Enter' && e.target.value !== '') {
       setTags([...tags, e.target.value]);
       e.target.value = '';
     }
@@ -49,6 +49,7 @@ const TagsInput = ({ selectedTags, tagsArr }) => {
         label='Blog Tags'
         type='text'
         fullWidth
+        helperText='Press Enter to add tag!'
         onKeyUp={e => addTags(e)}
       />
       <ul className={classes.list}>
