@@ -25,7 +25,7 @@ const blogReducer = (state = initialState, action) => {
       return { ...state, blogs: [...state.blogs, ...action.payload] };
 
     case 'RESET_BLOGS':
-      return { ...state, blogs: [] };
+      return { ...state, hasMoreBlogs: true, blogs: [] };
 
     case 'ADD_BLOG':
       return { ...state, blogs: [action.payload, ...state.blogs] };

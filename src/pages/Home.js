@@ -6,7 +6,7 @@ import React, {
   useCallback
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchBlogs, resetBlogs } from '../actions/blogActions';
+import axios from 'axios';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -14,9 +14,11 @@ import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Hidden from '@material-ui/core/Hidden';
 
+import { backendUrl } from '../config';
 import BlogCard from '../components/BlogCard';
 import Header from '../components/Header';
 import Profile from './Profile';
+import { fetchBlogs, resetBlogs } from '../actions/blogActions';
 import RecommendedUsers from '../components/RecommendedUsers';
 import Menu from '../components/Menu';
 
@@ -66,7 +68,7 @@ const Home = () => {
     [loading]
   );
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setIsOpen(!isOpen);
   };
 

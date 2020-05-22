@@ -32,6 +32,11 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     marginBottom: theme.spacing(2)
   },
+  header: {
+    '&:hover': {
+      cursor: 'pointer'
+    }
+  },
   media: {
     height: 0,
     paddingTop: '56.25%',
@@ -116,6 +121,7 @@ const BlogCard = ({ handleClick, getUserId, blog }) => {
           }
           title={author.username}
           subheader={moment(createdAt).format('MMMM D, YYYY')}
+          className={classes.header}
           onClick={openProfile}
         />
       </Grid>

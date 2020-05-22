@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import cx from 'clsx';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { backendUrl } from '../config';
 import BlogCard from '../components/BlogCard';
@@ -51,6 +52,7 @@ const Profile = ({ isOpen, onToggle, userId }) => {
   const classes = useStyles();
   const [userBlogs, setUserBlogs] = useState([]);
   const [isFollowed, setIsFollowed] = useState(false);
+  const [loading, setLoading] = useState(true);
   const user = useSelector(state => state.authUser.user);
   const dispatch = useDispatch();
 
@@ -61,13 +63,12 @@ const Profile = ({ isOpen, onToggle, userId }) => {
   const getProfile = async () => {
     const { data } = await axios.get(`${backendUrl}/user?id=${userId}`);
     const { blogs, username, id } = data;
-
     const blogsByUser = blogs.map(blog => ({
       ...blog,
       author: { _id: id, username: username }
     }));
-
     setUserBlogs(blogsByUser);
+    setLoading(false);
   };
 
   const manageFollow = () => {
@@ -79,56 +80,78 @@ const Profile = ({ isOpen, onToggle, userId }) => {
       axios.patch(`${backendUrl}/user/${userId}`);
     }
   };
+
   const checkProfileOwner = () => {
     if (user.id && userBlogs?.length) {
       return user.id !== userBlogs[0].author._id;
     }
     return false;
   };
+
   useEffect(() => {
-    if (user.followList?.includes(userBlogs?.author._id)) {
-      setIsFollowed(false);
-    } else {
-      setIsFollowed(true);
+    if (userBlogs.length) {
+      if (
+        user.followingList?.findIndex(
+          user => user === userBlogs[0].author._id
+        ) !== -1
+      ) {
+        setIsFollowed(true);
+      } else {
+        setIsFollowed(false);
+      }
     }
+  }, [userBlogs]);
+
+  useEffect(() => {
     getProfile();
   }, [userId]);
 
   return (
     <Fragment>
       <Drawer anchor='right' open={isOpen} onClose={toggleProfile}>
-        <Paper className={classes.paper}>
-          <div className={classes.flex}>
+        {loading ? (
+          <LinearProgress
+            variant='query'
+            color='secondary'
+            className={classes.loading}
+          />
+        ) : (
+          <Paper className={classes.paper}>
             <div className={classes.flex}>
-              <ArrowBackIosIcon fontSize='small' color='secondary' />
-              <Link color='secondary' onClick={toggleProfile}>
-                Back
-              </Link>
+              <div className={classes.flex}>
+                <ArrowBackIosIcon fontSize='small' color='secondary' />
+                <Link color='secondary' onClick={toggleProfile}>
+                  Back
+                </Link>
+              </div>
+              {checkProfileOwner() && (
+                <Button
+                  variant='contained'
+                  color='primary'
+                  size='small'
+                  onClick={manageFollow}
+                >
+                  {isFollowed ? 'unfollow' : 'Follow'}
+                </Button>
+              )}
             </div>
-            {checkProfileOwner() && (
-              <Button
-                variant='contained'
-                color='primary'
-                size='small'
-                onClick={manageFollow}
-              >
-                {isFollowed ? 'Unfollow' : 'Follow'}
-              </Button>
-            )}
-          </div>
 
-          <div className={classes.colFlex}>
-            <Avatar variant='rounded' className={cx(classes.avatar, classes.m)}>
-              {userBlogs.length ? userBlogs[0].author.username.charAt(0) : ''}
-            </Avatar>
-            <Typography variant='h4' className={classes.mb}>
-              {userBlogs.length ? userBlogs[0].author.username : ''}
-            </Typography>
-          </div>
-          {userBlogs?.map(blog => (
-            <BlogCard key={blog._id} blog={blog} />
-          ))}
-        </Paper>
+            <div className={classes.colFlex}>
+              <Avatar
+                variant='rounded'
+                className={cx(classes.avatar, classes.m)}
+              >
+                {userBlogs.length ? userBlogs[0].author.username.charAt(0) : ''}
+              </Avatar>
+              <Typography variant='h4' className={classes.mb}>
+                {userBlogs.length ? userBlogs[0].author.username : ''}
+              </Typography>
+            </div>
+            {userBlogs?.map(blog => (
+              <BlogCard key={blog._id} blog={blog} />
+            ))}
+          </Paper>
+        )}
       </Drawer>
     </Fragment>
   );

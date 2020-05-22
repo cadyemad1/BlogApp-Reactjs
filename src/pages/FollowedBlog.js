@@ -9,13 +9,23 @@ import axios from 'axios';
 import { Container } from '@material-ui/core';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Hidden from '@material-ui/core/Hidden';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { backendUrl } from '../config';
 import Header from '../components/Header';
 import BlogCard from '../components/BlogCard';
 import Menu from '../components/Menu';
 
+const useStyles = makeStyles(theme => ({
+  ntFnd: {
+    color: 'white',
+    marginTop: theme.spacing(2)
+  }
+}));
+
 const FollowedBlog = () => {
+  const classes = useStyles();
   const limit = 3;
   const [page, setPage] = useState(1);
   const [followedUsersBlogs, setFollowedUsersBlogs] = useState([]);
@@ -61,19 +71,28 @@ const FollowedBlog = () => {
         <Menu />
       </Hidden>
       <Container maxWidth='sm' style={{ marginTop: 30 }}>
-        {followedUsersBlogs.map((blog, index) => {
-          if (followedUsersBlogs.length === index + 1)
+        {!followedUsersBlogs.length && !loading ? (
+          <Typography variant='h4' align='center' className={classes.ntFnd}>
+            No Blogs Found..
+            <Typography variant='h6'>
+              Follow other users to see their blogs!
+            </Typography>
+          </Typography>
+        ) : (
+          followedUsersBlogs.map((blog, index) => {
+            if (followedUsersBlogs.length === index + 1)
+              return (
+                <div ref={lastBlogRef} key={blog._id}>
+                  <BlogCard blog={blog} />
+                </div>
+              );
             return (
-              <div ref={lastBlogRef} key={blog._id}>
+              <div key={blog._id}>
                 <BlogCard blog={blog} />
               </div>
             );
-          return (
-            <div key={blog._id}>
-              <BlogCard blog={blog} />
-            </div>
-          );
-        })}
+          })
+        )}
         {loading && <LinearProgress variant='query' color='secondary' />}
       </Container>
     </Fragment>
